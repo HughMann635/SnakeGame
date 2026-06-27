@@ -60,9 +60,13 @@ public class GameLogic extends JPanel implements ActionListener {
                 }    
             }
             
-            //come back to this later
             for (int i = 0; i < snakeparts; i++) {
                 g.setColor(Color.GREEN);
+                if (i == 0) {
+                    g.setColor(new Color(0, 100, 0));
+                } else if (i % 2 == 0) {
+                    g.setColor(new Color(0, 190, 0));
+                }
                 g.fillRect(x[i], y[i], cellDim, cellDim);
             }
 
@@ -70,7 +74,7 @@ public class GameLogic extends JPanel implements ActionListener {
             g.fillRect(appleX, appleY, cellDim, cellDim);
 
         } else {
-            
+            gameOver(g);
         }
     }
 
@@ -113,6 +117,9 @@ public class GameLogic extends JPanel implements ActionListener {
         if (x[0] == appleX && y[0] == appleY) {
             snakeparts++;
             newApple();
+            if ((snakeparts - 6) > highScore) {
+                highScore = snakeparts - 6;
+            }
         }
         for (int i = 1; i < snakeparts; i++) {
             if (x[0] == x[i] && y[0] == y[i] && collisions == true) {
@@ -126,8 +133,20 @@ public class GameLogic extends JPanel implements ActionListener {
         }
     }
 
-    public void gameOver() {
-
+    public void gameOver(Graphics g) {
+        for (int i = 0; i < boardDim; i++) {
+            for (int j = 0; j < boardDim; j++) {
+                g.setColor(Color.GRAY);
+                g.fillRect(i*cellDim, i*cellDim, cellDim, cellDim);
+                g.setColor(new Color(0,0,150));
+                g.fillRect(i*cellDim, i*cellDim, cellDim, cellDim);
+            }    
+        }
+        g.setColor(new Color(20, 20, 20));
+        g.setFont(new Font("Roboto", Font.BOLD, 75));
+        FontMetrics font = getFontMetrics(g.getFont());
+        g.drawString("Score: "+ (snakeparts-6), (screenDim - font.stringWidth("Score: "+ (snakeparts-6)))/2, 3*screenDim/7);
+        g.drawString("High Score: "+ highScore, (screenDim - font.stringWidth("High Score: "+ highScore))/2, 4*screenDim/7);
     }
 
     public void actionPerformed (ActionEvent e) {
