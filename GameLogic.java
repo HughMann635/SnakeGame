@@ -10,8 +10,8 @@ public class GameLogic extends JPanel implements ActionListener {
     int boardDim = 15;
     int screenDim = 600;
     int cellDim = screenDim/boardDim;
-    int x[];
-    int y[];
+    int x[] = new int[boardDim*boardDim];
+    int y[] = new int[boardDim*boardDim];
     int gameDelay = 100;
     int appleX;
     int appleY; 
@@ -42,8 +42,8 @@ public class GameLogic extends JPanel implements ActionListener {
         snakeparts = 5;
         direction = 'R';
         running = true;
-        x[0] = 3*cellDim;
-        y[0] = cellDim/2;
+        x[0] = 3;
+        y[0] = boardDim/2;
         timer = new Timer(gameDelay, this);
         timer.start();
     }
@@ -54,9 +54,9 @@ public class GameLogic extends JPanel implements ActionListener {
             for (int i = 0; i < boardDim; i++) {
                 for (int j = 0; j < boardDim; j++) {
                     g.setColor(Color.GRAY);
-                    g.fillRect(i*cellDim, i*cellDim, cellDim, cellDim);
+                    g.fillRect(i*cellDim, j*cellDim, cellDim, cellDim);
                     g.setColor(new Color(0,0,150));
-                    g.fillRect(i*cellDim, i*cellDim, cellDim, cellDim);
+                    g.drawRect(i*cellDim, j*cellDim, cellDim, cellDim);
                 }    
             }
             
@@ -67,11 +67,15 @@ public class GameLogic extends JPanel implements ActionListener {
                 } else if (i % 2 == 0) {
                     g.setColor(new Color(0, 190, 0));
                 }
-                g.fillRect(x[i], y[i], cellDim, cellDim);
+                g.fillRect(x[i]*cellDim, y[i]*cellDim, cellDim, cellDim);
             }
 
             g.setColor(Color.RED);
-            g.fillRect(appleX, appleY, cellDim, cellDim);
+            g.fillRect(appleX*cellDim, appleY*cellDim, cellDim, cellDim);
+
+        g.setFont(new Font("Roboto", Font.BOLD, 40));
+        FontMetrics font = getFontMetrics(g.getFont());
+        g.drawString("Score: "+ (snakeparts-5), (screenDim - font.stringWidth("Score: "+ (snakeparts-5)))/2, screenDim/12);
 
         } else {
             gameOver(g);
@@ -86,19 +90,21 @@ public class GameLogic extends JPanel implements ActionListener {
 
         switch (direction) {
             case 'U':
-                y[0] += 1;  break;
-            case 'D':
                 y[0] -= 1;  break;
+            case 'D':
+                y[0] += 1;  break;
             case 'L':
                 x[0] -= 1;  break;
             case 'R':
                 x[0] += 1;  break;
+            case 'X':
+                gameOver(getGraphics()); break;
         }
     }
 
     public boolean contains(int[] list, int item) {
-        for (int k = 0; k > list.length; k++) {
-            if (item == list[k]) {
+        for (int k = 0; k < list.length; k++) {
+            if (list[k] == item) {
                 return true;
             }
         }
@@ -117,8 +123,8 @@ public class GameLogic extends JPanel implements ActionListener {
         if (x[0] == appleX && y[0] == appleY) {
             snakeparts++;
             newApple();
-            if ((snakeparts - 6) > highScore) {
-                highScore = snakeparts - 6;
+            if ((snakeparts - 5) > highScore) {
+                highScore = snakeparts - 5;
             }
         }
         for (int i = 1; i < snakeparts; i++) {
@@ -126,7 +132,7 @@ public class GameLogic extends JPanel implements ActionListener {
                 running = false;
             }
         }
-        if (x[0] < 0 || x[0] > screenDim || y[0] < 0 || y[0] > screenDim) {
+        if (x[0] < 0 || x[0] >= boardDim || y[0] < 0 || y[0] >= boardDim) {
             if (collisions == true) {
                 running = false;
             }
@@ -137,15 +143,15 @@ public class GameLogic extends JPanel implements ActionListener {
         for (int i = 0; i < boardDim; i++) {
             for (int j = 0; j < boardDim; j++) {
                 g.setColor(Color.GRAY);
-                g.fillRect(i*cellDim, i*cellDim, cellDim, cellDim);
+                g.fillRect(i*cellDim, j*cellDim, cellDim, cellDim);
                 g.setColor(new Color(0,0,150));
-                g.fillRect(i*cellDim, i*cellDim, cellDim, cellDim);
+                g.drawRect(i*cellDim, j*cellDim, cellDim, cellDim);
             }    
         }
         g.setColor(new Color(20, 20, 20));
         g.setFont(new Font("Roboto", Font.BOLD, 75));
         FontMetrics font = getFontMetrics(g.getFont());
-        g.drawString("Score: "+ (snakeparts-6), (screenDim - font.stringWidth("Score: "+ (snakeparts-6)))/2, 3*screenDim/7);
+        g.drawString("Score: "+ (snakeparts-5), (screenDim - font.stringWidth("Score: "+ (snakeparts-5)))/2, 3*screenDim/7);
         g.drawString("High Score: "+ highScore, (screenDim - font.stringWidth("High Score: "+ highScore))/2, 4*screenDim/7);
     }
 
@@ -179,6 +185,8 @@ public class GameLogic extends JPanel implements ActionListener {
                     if (direction != 'U') {
                         direction = 'D';
                     } break;
+                case KeyEvent.VK_R:
+                    direction = 'X';
             }
         }
     }
