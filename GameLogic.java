@@ -1,5 +1,4 @@
 //Importing libraries
-import javax.swing.Action;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.util.Random;
@@ -64,7 +63,7 @@ public class GameLogic extends JPanel implements ActionListener {
             //come back to this later
             for (int i = 0; i < snakeparts; i++) {
                 g.setColor(Color.GREEN);
-                g.fillRect();
+                g.fillRect(x[i], y[i], cellDim, cellDim);
             }
 
             g.setColor(Color.RED);
@@ -106,22 +105,62 @@ public class GameLogic extends JPanel implements ActionListener {
         do {
             appleX = random.nextInt((int)(boardDim));
             appleY = random.nextInt((int)(boardDim));
-        } while ();
+        } while (contains(x, appleX) && contains(y, appleY));
     }
 
+    //Checks for collisions with apples, the walls, and itself
     public void checkPos() {
-
+        if (x[0] == appleX && y[0] == appleY) {
+            snakeparts++;
+            newApple();
+        }
+        for (int i = 1; i < snakeparts; i++) {
+            if (x[0] == x[i] && y[0] == y[i] && collisions == true) {
+                running = false;
+            }
+        }
+        if (x[0] < 0 || x[0] > screenDim || y[0] < 0 || y[0] > screenDim) {
+            if (collisions == true) {
+                running = false;
+            }
+        }
     }
 
     public void gameOver() {
 
     }
 
-    public void actionRunner() {
-
+    public void actionPerformed (ActionEvent e) {
+        if (running) {
+            move();
+            checkPos();
+        } repaint();
     }
 
     public class keyAdapter extends KeyAdapter {
-
+        public void keypress(KeyEvent e) {
+            switch(e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                case KeyEvent.VK_A:
+                    if (direction != 'R') {
+                        direction = 'L';
+                    }
+                case KeyEvent.VK_RIGHT:
+                case KeyEvent.VK_D:
+                    if (direction != 'L') {
+                        direction = 'R';
+                    }
+                case KeyEvent.VK_UP:
+                case KeyEvent.VK_W:
+                    if (direction != 'D') {
+                        direction = 'U';
+                    }
+                case KeyEvent.VK_DOWN:
+                case KeyEvent.VK_S:
+                    if (direction != 'U') {
+                        direction = 'D';
+                    }
+            }
+        }
     }
 }
