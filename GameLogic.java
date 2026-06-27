@@ -23,8 +23,22 @@ public class GameLogic extends JPanel implements ActionListener {
     boolean running = false;
     boolean mines = false;
     boolean collisions = true;
+    int buttonwidth = 60;
+    int buttonheight = 40;
     Timer timer;
     Random random;
+
+    //Array containing the dimensions of the buttons featured on the main menu screen
+    //Top row: Speed adjustment (slow, medium, fast)
+    //Middle row: Board size adjustment (small, medium, large)
+    //Bottom row: Modifiers (toggle mines, toggle collisions, reset modifiers)
+    //At the very bottom is the Start button
+    int[][] buttons = {
+        {200, 3*screenDim/8}, {330, 3*screenDim/8}, {460, 3*screenDim/8},
+        {200, 4*screenDim/8}, {330, 4*screenDim/8}, {460, 4*screenDim/8},    
+        {200, 5*screenDim/8}, {330, 5*screenDim/8}, {460, 5*screenDim/8},
+        {35, 6*screenDim/8}
+    };
 
     GameLogic() {
         random = new Random();
