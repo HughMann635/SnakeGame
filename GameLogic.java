@@ -165,8 +165,26 @@ public class GameLogic extends JPanel implements ActionListener {
         g.setColor(new Color(20, 20, 20));
         g.setFont(new Font("Roboto", Font.BOLD, 75));
         FontMetrics font = getFontMetrics(g.getFont());
-        g.drawString("Score: "+ (snakeparts-5), (screenDim - font.stringWidth("Score: "+ (snakeparts-5)))/2, 3*screenDim/7);
-        g.drawString("High Score: "+ highScore, (screenDim - font.stringWidth("High Score: "+ highScore))/2, 4*screenDim/7);
+        g.drawString("Score: "+ (snakeparts-5), (screenDim - font.stringWidth("Score: "+ (snakeparts-5)))/2, 1*screenDim/7);
+        g.drawString("High Score: "+ highScore, (screenDim - font.stringWidth("High Score: "+ highScore))/2, 2*screenDim/7);
+
+        for (int i = 0; i < 10; i++) {
+            switch (i) {
+                case 0: case 1: case 2:
+                    g.setColor(new Color(255,255,0)); break;
+                case 3: case 4: case 5:
+                    g.setColor(new Color(0,255,0)); break;
+                case 6: case 7: case 8:
+                    g.setColor(new Color(255,0,0)); break;
+                case 9:
+                    g.setColor(new Color(100,100,100)); break; 
+            }
+            if (i == 9) {
+                g.fillRect(buttons[i][0], buttons[i][1], buttonwidth+40, buttonheight+10); 
+            } else { 
+                g.fillRect(buttons[i][0], buttons[i][1], buttonwidth, buttonheight); 
+            }
+        }
     }
 
     public void actionPerformed (ActionEvent e) {
