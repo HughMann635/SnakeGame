@@ -59,17 +59,17 @@ public class GameLogic extends JPanel implements ActionListener {
                 if (mousex >= buttons[2][0] && mousex <= buttons[2][0] + buttonwidth && mousey >= buttons[2][1] && mousey <= buttons[2][1] + buttonheight) {
                     gameDelay = 100;}
                 if (mousex >= buttons[3][0] && mousex <= buttons[3][0] + buttonwidth && mousey >= buttons[3][1] && mousey <= buttons[3][1] + buttonheight) {
-                    boardDim = 10;}
+                    boardDim = 10; cellDim = screenDim/boardDim;}
                 if (mousex >= buttons[4][0] && mousex <= buttons[4][0] + buttonwidth && mousey >= buttons[4][1] && mousey <= buttons[4][1] + buttonheight) {
-                    boardDim = 15;}
+                    boardDim = 15; cellDim = screenDim/boardDim;}
                 if (mousex >= buttons[5][0] && mousex <= buttons[5][0] + buttonwidth && mousey >= buttons[5][1] && mousey <= buttons[5][1] + buttonheight) {
-                    boardDim = 20;}
+                    boardDim = 20; cellDim = screenDim/boardDim;}
                 if (mousex >= buttons[6][0] && mousex <= buttons[6][0] + buttonwidth && mousey >= buttons[6][1] && mousey <= buttons[6][1] + buttonheight) {
                     if (mines == true) { mines = false; }
-                    if (mines == false) { mines = true; }}
+                    else if (mines == false) { mines = true; }}
                 if (mousex >= buttons[7][0] && mousex <= buttons[7][0] + buttonwidth && mousey >= buttons[7][1] && mousey <= buttons[7][1] + buttonheight) {
                     if (collisions == true) { collisions = false; }
-                    if (collisions == false) { collisions = true; }}
+                    else if (collisions == false) { collisions = true; }}
                 if (mousex >= buttons[8][0] && mousex <= buttons[8][0] + buttonwidth && mousey >= buttons[8][1] && mousey <= buttons[8][1] + buttonheight) {
                     mines = false; collisions = true;}
                 if (mousex >= buttons[9][0] && mousex <= buttons[9][0] + buttonwidth + 40 && mousey >= buttons[9][1] && mousey <= buttons[9][1] + buttonheight + 10) {
@@ -140,7 +140,7 @@ public class GameLogic extends JPanel implements ActionListener {
             case 'R':
                 x[0] += 1;  break;
             case 'X':
-                gameOver(getGraphics()); break;
+                running = false; break;
         }
     }
 
@@ -177,7 +177,14 @@ public class GameLogic extends JPanel implements ActionListener {
         if (x[0] < 0 || x[0] >= boardDim || y[0] < 0 || y[0] >= boardDim) {
             if (collisions == true) {
                 running = false;
+            } else if (x[0] < 0 || x[0] > boardDim) {
+                x[0] = boardDim - x[0];
+            } else if (x[0] < 0 || x[0] > boardDim) {
+                y[0] = boardDim - y[0];
             }
+        }
+        if (running == false) {
+            timer.stop();
         }
     }
 
