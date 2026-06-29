@@ -23,7 +23,7 @@ public class GameLogic extends JPanel implements ActionListener {
     boolean running = false;
     boolean mines = false;
     boolean collisions = true;
-    int buttonwidth = 60;
+    int buttonwidth = 120;
     int buttonheight = 40;
     Timer timer;
     Random random;
@@ -185,6 +185,21 @@ public class GameLogic extends JPanel implements ActionListener {
                 g.fillRect(buttons[i][0], buttons[i][1], buttonwidth, buttonheight); 
             }
         }
+
+        g.setFont(new Font("Roboto", Font.BOLD, 25 ));
+        font = getFontMetrics(getFont());
+        g.setColor(Color.BLACK);
+        g.drawString("SLOW", buttons[0][0]+15, buttons[0][1]+buttonheight/2+10);
+        g.drawString("MEDIUM", buttons[1][0]+15, buttons[1][1]+buttonheight/2+10);
+        g.drawString("FAST", buttons[2][0]+15, buttons[2][1]+buttonheight/2+10);
+        g.drawString("10x10", buttons[3][0]+15, buttons[3][1]+buttonheight/2+10);
+        g.drawString("15x15", buttons[4][0]+15, buttons[4][1]+buttonheight/2+10);
+        g.drawString("20x20", buttons[5][0]+15, buttons[5][1]+buttonheight/2+10);
+        g.drawString("MINES", buttons[6][0]+15, buttons[6][1]+buttonheight/2+10);
+        g.drawString("CHILL", buttons[7][0]+15, buttons[7][1]+buttonheight/2+10);
+        g.drawString("RESET", buttons[8][0]+15, buttons[8][1]+buttonheight/2+10);
+        g.drawString("START", buttons[9][0]+15, buttons[9][1]+buttonheight/2+10);
+
     }
 
     public void actionPerformed (ActionEvent e) {
