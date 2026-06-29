@@ -47,6 +47,34 @@ public class GameLogic extends JPanel implements ActionListener {
         this.setFocusable(true);
 
         this.addKeyListener(new keyAdapter());
+        this.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                int mousex = e.getX();
+                int mousey = e.getY();
+
+                if (mousex >= buttons[0][0] && mousex <= buttons[0][0] + buttonwidth && mousey >= buttons[0][1] && mousey <= buttons[0][1] + buttonheight) {
+                    gameDelay = 200;}
+                if (mousex >= buttons[1][0] && mousex <= buttons[1][0] + buttonwidth && mousey >= buttons[1][1] && mousey <= buttons[1][1] + buttonheight) {
+                    gameDelay = 150;}
+                if (mousex >= buttons[2][0] && mousex <= buttons[2][0] + buttonwidth && mousey >= buttons[2][1] && mousey <= buttons[2][1] + buttonheight) {
+                    gameDelay = 100;}
+                if (mousex >= buttons[3][0] && mousex <= buttons[3][0] + buttonwidth && mousey >= buttons[3][1] && mousey <= buttons[3][1] + buttonheight) {
+                    boardDim = 10;}
+                if (mousex >= buttons[4][0] && mousex <= buttons[4][0] + buttonwidth && mousey >= buttons[4][1] && mousey <= buttons[4][1] + buttonheight) {
+                    boardDim = 15;}
+                if (mousex >= buttons[5][0] && mousex <= buttons[5][0] + buttonwidth && mousey >= buttons[5][1] && mousey <= buttons[5][1] + buttonheight) {
+                    boardDim = 20;}
+                if (mousex >= buttons[6][0] && mousex <= buttons[6][0] + buttonwidth && mousey >= buttons[6][1] && mousey <= buttons[6][1] + buttonheight) {
+                    if (mines == true) { mines = false; }
+                    if (mines == false) { mines = true; }}
+                if (mousex >= buttons[7][0] && mousex <= buttons[7][0] + buttonwidth && mousey >= buttons[7][1] && mousey <= buttons[7][1] + buttonheight) {
+                    if (collisions == true) { collisions = false; }
+                    if (collisions == false) { collisions = true; }}
+                if (mousex >= buttons[8][0] && mousex <= buttons[8][0] + buttonwidth && mousey >= buttons[8][1] && mousey <= buttons[8][1] + buttonheight) {
+                    mines = false; collisions = true;}
+                if (mousex >= buttons[9][0] && mousex <= buttons[9][0] + buttonwidth + 40 && mousey >= buttons[9][1] && mousey <= buttons[9][1] + buttonheight + 10) {
+                    StartGame();}
+            }});
 
         StartGame();
     }
@@ -198,8 +226,7 @@ public class GameLogic extends JPanel implements ActionListener {
         g.drawString("MINES", buttons[6][0]+15, buttons[6][1]+buttonheight/2+10);
         g.drawString("CHILL", buttons[7][0]+15, buttons[7][1]+buttonheight/2+10);
         g.drawString("RESET", buttons[8][0]+15, buttons[8][1]+buttonheight/2+10);
-        g.drawString("START", buttons[9][0]+15, buttons[9][1]+buttonheight/2+10);
-
+        g.drawString("START", buttons[9][0]+35, buttons[9][1]+buttonheight/2+10);
     }
 
     public void actionPerformed (ActionEvent e) {
