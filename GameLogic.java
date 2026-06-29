@@ -179,7 +179,7 @@ public class GameLogic extends JPanel implements ActionListener {
                 running = false;
             } else if (x[0] < 0 || x[0] > boardDim) {
                 x[0] = boardDim - x[0];
-            } else if (x[0] < 0 || x[0] > boardDim) {
+            } else if (y[0] < 0 || y[0] > boardDim) {
                 y[0] = boardDim - y[0];
             }
         }
