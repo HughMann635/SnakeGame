@@ -27,6 +27,7 @@ public class GameLogic extends JPanel implements ActionListener {
     int buttonheight = 40;
     Timer timer;
     Random random;
+    boolean hasMoved = false;
 
     //Array containing the dimensions of the buttons featured on the main menu screen
     //Top row: Speed adjustment (slow, medium, fast)
@@ -54,29 +55,30 @@ public class GameLogic extends JPanel implements ActionListener {
             public void mousePressed(MouseEvent e) {
                 int mousex = e.getX();
                 int mousey = e.getY();
-
-                if (mousex >= buttons[0][0] && mousex <= buttons[0][0] + buttonwidth && mousey >= buttons[0][1] && mousey <= buttons[0][1] + buttonheight) {
-                    gameDelay = 200;}
-                if (mousex >= buttons[1][0] && mousex <= buttons[1][0] + buttonwidth && mousey >= buttons[1][1] && mousey <= buttons[1][1] + buttonheight) {
-                    gameDelay = 120;}
-                if (mousex >= buttons[2][0] && mousex <= buttons[2][0] + buttonwidth && mousey >= buttons[2][1] && mousey <= buttons[2][1] + buttonheight) {
-                    gameDelay = 70;}
-                if (mousex >= buttons[3][0] && mousex <= buttons[3][0] + buttonwidth && mousey >= buttons[3][1] && mousey <= buttons[3][1] + buttonheight) {
-                    boardDim = 10; cellDim = screenDim/boardDim;}
-                if (mousex >= buttons[4][0] && mousex <= buttons[4][0] + buttonwidth && mousey >= buttons[4][1] && mousey <= buttons[4][1] + buttonheight) {
-                    boardDim = 15; cellDim = screenDim/boardDim;}
-                if (mousex >= buttons[5][0] && mousex <= buttons[5][0] + buttonwidth && mousey >= buttons[5][1] && mousey <= buttons[5][1] + buttonheight) {
-                    boardDim = 20; cellDim = screenDim/boardDim;}
-                if (mousex >= buttons[6][0] && mousex <= buttons[6][0] + buttonwidth && mousey >= buttons[6][1] && mousey <= buttons[6][1] + buttonheight) {
-                    if (mines == true) { mines = false; }
-                    else if (mines == false) { mines = true; }}
-                if (mousex >= buttons[7][0] && mousex <= buttons[7][0] + buttonwidth && mousey >= buttons[7][1] && mousey <= buttons[7][1] + buttonheight) {
-                    if (collisions == true) { collisions = false; }
-                    else if (collisions == false) { collisions = true; }}
-                if (mousex >= buttons[8][0] && mousex <= buttons[8][0] + buttonwidth && mousey >= buttons[8][1] && mousey <= buttons[8][1] + buttonheight) {
-                    mines = false; collisions = true;}
-                if (mousex >= buttons[9][0] && mousex <= buttons[9][0] + buttonwidth + 40 && mousey >= buttons[9][1] && mousey <= buttons[9][1] + buttonheight + 10) {
-                    StartGame();}
+                if (!running) {
+                    if (mousex >= buttons[0][0] && mousex <= buttons[0][0] + buttonwidth && mousey >= buttons[0][1] && mousey <= buttons[0][1] + buttonheight) {
+                        gameDelay = 200;}
+                    if (mousex >= buttons[1][0] && mousex <= buttons[1][0] + buttonwidth && mousey >= buttons[1][1] && mousey <= buttons[1][1] + buttonheight) {
+                        gameDelay = 120;}
+                    if (mousex >= buttons[2][0] && mousex <= buttons[2][0] + buttonwidth && mousey >= buttons[2][1] && mousey <= buttons[2][1] + buttonheight) {
+                        gameDelay = 70;}
+                    if (mousex >= buttons[3][0] && mousex <= buttons[3][0] + buttonwidth && mousey >= buttons[3][1] && mousey <= buttons[3][1] + buttonheight) {
+                        boardDim = 10; cellDim = screenDim/boardDim;}
+                    if (mousex >= buttons[4][0] && mousex <= buttons[4][0] + buttonwidth && mousey >= buttons[4][1] && mousey <= buttons[4][1] + buttonheight) {
+                        boardDim = 15; cellDim = screenDim/boardDim;}
+                    if (mousex >= buttons[5][0] && mousex <= buttons[5][0] + buttonwidth && mousey >= buttons[5][1] && mousey <= buttons[5][1] + buttonheight) {
+                        boardDim = 20; cellDim = screenDim/boardDim;}
+                    if (mousex >= buttons[6][0] && mousex <= buttons[6][0] + buttonwidth && mousey >= buttons[6][1] && mousey <= buttons[6][1] + buttonheight) {
+                        if (mines == true) { mines = false; }
+                        else if (mines == false) { mines = true; }}
+                    if (mousex >= buttons[7][0] && mousex <= buttons[7][0] + buttonwidth && mousey >= buttons[7][1] && mousey <= buttons[7][1] + buttonheight) {
+                        if (collisions == true) { collisions = false; }
+                        else if (collisions == false) { collisions = true; }}
+                    if (mousex >= buttons[8][0] && mousex <= buttons[8][0] + buttonwidth && mousey >= buttons[8][1] && mousey <= buttons[8][1] + buttonheight) {
+                        mines = false; collisions = true;}
+                    if (mousex >= buttons[9][0] && mousex <= buttons[9][0] + buttonwidth + 40 && mousey >= buttons[9][1] && mousey <= buttons[9][1] + buttonheight + 10) {
+                        StartGame();}
+                }
             }});
 
         StartGame();
@@ -286,37 +288,44 @@ public class GameLogic extends JPanel implements ActionListener {
     //Pretty much the main loop for the game; this keeps the game running
     public void actionPerformed (ActionEvent e) {
         if (running) {
-            move();
+            move(); 
             checkPos();
+            hasMoved = false;
         } repaint();
     }
 
     //Responsible for detecting key input
     public class keyAdapter extends KeyAdapter {
         public void keyPressed (KeyEvent e) {
-            switch(e.getKeyCode()) {
-                case KeyEvent.VK_LEFT:
-                case KeyEvent.VK_A:
-                    if (direction != 'R') {
-                        direction = 'L';
-                    } break;
-                case KeyEvent.VK_RIGHT:
-                case KeyEvent.VK_D:
-                    if (direction != 'L') {
-                        direction = 'R';
-                    } break;
-                case KeyEvent.VK_UP:
-                case KeyEvent.VK_W:
-                    if (direction != 'D') {
-                        direction = 'U';
-                    } break;
-                case KeyEvent.VK_DOWN:
-                case KeyEvent.VK_S:
-                    if (direction != 'U') {
-                        direction = 'D';
-                    } break;
-                case KeyEvent.VK_R:
-                    direction = 'X';
+            if (!hasMoved) {
+                switch(e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                    case KeyEvent.VK_A:
+                        if (direction != 'R') {
+                            direction = 'L';
+                            hasMoved = true;
+                        } break;
+                    case KeyEvent.VK_RIGHT:
+                    case KeyEvent.VK_D:
+                        if (direction != 'L') {
+                            direction = 'R';
+                            hasMoved = true;
+                        } break;
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_W:
+                        if (direction != 'D') {
+                            direction = 'U';
+                            hasMoved = true;
+                        } break;
+                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_S:
+                        if (direction != 'U') {
+                            direction = 'D';
+                            hasMoved = true;
+                        } break;
+                    case KeyEvent.VK_R:
+                        direction = 'X';
+                }
             }
         }
     }
