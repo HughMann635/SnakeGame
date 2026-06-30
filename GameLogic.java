@@ -17,8 +17,8 @@ public class GameLogic extends JPanel implements ActionListener {
     int appleY; 
     int snakeparts;
     int highScore = 0;
-    int mineX[] = new int[boardDim*boardDim];
-    int mineY[] = new int[boardDim*boardDim];
+    int mineX[] = new int[(boardDim*boardDim)/2];
+    int mineY[] = new int[(boardDim*boardDim)/2];
     char direction = 'R';
     boolean running = false;
     boolean mines = false;
@@ -80,7 +80,7 @@ public class GameLogic extends JPanel implements ActionListener {
     }
 
     public void StartGame() {
-        newApple();
+        generate();
         snakeparts = 5;
         direction = 'R';
         running = true;
@@ -88,6 +88,10 @@ public class GameLogic extends JPanel implements ActionListener {
         y[0] = boardDim/2;
         timer = new Timer(gameDelay, this);
         timer.start();
+        for (int i = 0; i < mineX.length; i++) {
+            mineX[i] = 0;
+            mineY[i] = 0;
+        }
     }
 
     public void paintComponent (Graphics g) {
@@ -110,6 +114,10 @@ public class GameLogic extends JPanel implements ActionListener {
                     g.setColor(new Color(0, 190, 0));
                 }
                 g.fillRect(x[i]*cellDim, y[i]*cellDim, cellDim, cellDim);
+                if (mines && i < (snakeparts-6)/2) {
+                    g.setColor(new Color(0,0,57));
+                    g.fillRect(mineX[i]*cellDim, mineY[i]*cellDim, cellDim, cellDim);
+                }
             }
 
             g.setColor(Color.RED);
@@ -153,16 +161,15 @@ public class GameLogic extends JPanel implements ActionListener {
         return false;
     }
 
-    
-    public void newApple() {
+    public void generate() {
         do {
             appleX = random.nextInt((int)(boardDim));
             appleY = random.nextInt((int)(boardDim));
         } while (contains(x, appleX) && contains(y, appleY));
-        if ((snakeparts-6)%2 == 0 && mines) {
+        if ((snakeparts-6)%2 == 1 && mines) {
             do {
-                mineX[(snakeparts-6)/2] = random.nextInt((int)(boardDim))*cellDim;
-                mineY[(snakeparts-6)/2] = random.nextInt((int)(boardDim))*cellDim;
+                mineX[(snakeparts-6)/2] = random.nextInt((int)(boardDim));
+                mineY[(snakeparts-6)/2] = random.nextInt((int)(boardDim));
             } while (contains(x, mineX[(snakeparts-6)/2]) && contains(y, mineY[(snakeparts-6)/2]));
         } 
     }
@@ -171,13 +178,18 @@ public class GameLogic extends JPanel implements ActionListener {
     public void checkPos() {
         if (x[0] == appleX && y[0] == appleY) {
             snakeparts++;
-            newApple();
+            generate();
             if ((snakeparts - 5) > highScore) {
                 highScore = snakeparts - 5;
             }
         }
         for (int i = 1; i < snakeparts; i++) {
             if (x[0] == x[i] && y[0] == y[i] && collisions == true) {
+                running = false;
+            }
+        }
+        for (int i = 0; i < (snakeparts-6)/2; i++) {
+            if (x[0] == mineX[i] && y[0] == mineY[i]) {
                 running = false;
             }
         }
@@ -230,17 +242,26 @@ public class GameLogic extends JPanel implements ActionListener {
 
         g.setFont(new Font("Roboto", Font.BOLD, 25 ));
         font = getFontMetrics(getFont());
-        g.setColor(Color.BLACK);
+        if (gameDelay == 200) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("SLOW", buttons[0][0]+15, buttons[0][1]+buttonheight/2+10);
+        if (gameDelay == 150) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("MEDIUM", buttons[1][0]+15, buttons[1][1]+buttonheight/2+10);
+        if (gameDelay == 100) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("FAST", buttons[2][0]+15, buttons[2][1]+buttonheight/2+10);
+        if (boardDim == 10) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("10x10", buttons[3][0]+15, buttons[3][1]+buttonheight/2+10);
+        if (boardDim == 15) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("15x15", buttons[4][0]+15, buttons[4][1]+buttonheight/2+10);
+        if (boardDim == 20) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("20x20", buttons[5][0]+15, buttons[5][1]+buttonheight/2+10);
+        if (mines) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("MINES", buttons[6][0]+15, buttons[6][1]+buttonheight/2+10);
+        if (!collisions) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("CHILL", buttons[7][0]+15, buttons[7][1]+buttonheight/2+10);
+        g.setColor(Color.BLACK);
         g.drawString("RESET", buttons[8][0]+15, buttons[8][1]+buttonheight/2+10);
         g.drawString("START", buttons[9][0]+35, buttons[9][1]+buttonheight/2+10);
+        repaint();
     }
 
     public void actionPerformed (ActionEvent e) {
