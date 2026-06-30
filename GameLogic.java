@@ -153,11 +153,18 @@ public class GameLogic extends JPanel implements ActionListener {
         return false;
     }
 
+    
     public void newApple() {
         do {
             appleX = random.nextInt((int)(boardDim));
             appleY = random.nextInt((int)(boardDim));
         } while (contains(x, appleX) && contains(y, appleY));
+        if ((snakeparts-6)%2 == 0 && mines) {
+            do {
+                mineX[(snakeparts-6)/2] = random.nextInt((int)(boardDim))*cellDim;
+                mineY[(snakeparts-6)/2] = random.nextInt((int)(boardDim))*cellDim;
+            } while (contains(x, mineX[(snakeparts-6)/2]) && contains(y, mineY[(snakeparts-6)/2]));
+        } 
     }
 
     //Checks for collisions with apples, the walls, and itself
