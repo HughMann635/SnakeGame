@@ -12,7 +12,7 @@ public class GameLogic extends JPanel implements ActionListener {
     int cellDim = screenDim/boardDim;
     int x[] = new int[boardDim*boardDim];
     int y[] = new int[boardDim*boardDim];
-    int gameDelay = 100;
+    int gameDelay = 120;
     int appleX;
     int appleY; 
     int snakeparts;
@@ -55,9 +55,9 @@ public class GameLogic extends JPanel implements ActionListener {
                 if (mousex >= buttons[0][0] && mousex <= buttons[0][0] + buttonwidth && mousey >= buttons[0][1] && mousey <= buttons[0][1] + buttonheight) {
                     gameDelay = 200;}
                 if (mousex >= buttons[1][0] && mousex <= buttons[1][0] + buttonwidth && mousey >= buttons[1][1] && mousey <= buttons[1][1] + buttonheight) {
-                    gameDelay = 150;}
+                    gameDelay = 120;}
                 if (mousex >= buttons[2][0] && mousex <= buttons[2][0] + buttonwidth && mousey >= buttons[2][1] && mousey <= buttons[2][1] + buttonheight) {
-                    gameDelay = 100;}
+                    gameDelay = 70;}
                 if (mousex >= buttons[3][0] && mousex <= buttons[3][0] + buttonwidth && mousey >= buttons[3][1] && mousey <= buttons[3][1] + buttonheight) {
                     boardDim = 10; cellDim = screenDim/boardDim;}
                 if (mousex >= buttons[4][0] && mousex <= buttons[4][0] + buttonwidth && mousey >= buttons[4][1] && mousey <= buttons[4][1] + buttonheight) {
@@ -244,9 +244,9 @@ public class GameLogic extends JPanel implements ActionListener {
         font = getFontMetrics(getFont());
         if (gameDelay == 200) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("SLOW", buttons[0][0]+15, buttons[0][1]+buttonheight/2+10);
-        if (gameDelay == 150) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
+        if (gameDelay == 120) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("MEDIUM", buttons[1][0]+15, buttons[1][1]+buttonheight/2+10);
-        if (gameDelay == 100) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
+        if (gameDelay == 70) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("FAST", buttons[2][0]+15, buttons[2][1]+buttonheight/2+10);
         if (boardDim == 10) {g.setColor(Color.BLACK);} else {g.setColor(Color.GRAY);};
         g.drawString("10x10", buttons[3][0]+15, buttons[3][1]+buttonheight/2+10);
@@ -261,6 +261,8 @@ public class GameLogic extends JPanel implements ActionListener {
         g.setColor(Color.BLACK);
         g.drawString("RESET", buttons[8][0]+15, buttons[8][1]+buttonheight/2+10);
         g.drawString("START", buttons[9][0]+35, buttons[9][1]+buttonheight/2+10);
+        g.drawString("Game made by", 400, 500);
+        g.drawString("Zahran G.", 400, 530);
         repaint();
     }
 
