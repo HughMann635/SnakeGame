@@ -6,7 +6,7 @@ import javax.swing.Timer;
 import java.awt.event.*;
 
 public class GameLogic extends JPanel implements ActionListener {
-    //Declaring needed variables
+    //Declaring variables
     int boardDim = 15;
     int screenDim = 600;
     int cellDim = screenDim/boardDim;
@@ -40,6 +40,7 @@ public class GameLogic extends JPanel implements ActionListener {
         {35, 6*screenDim/8}
     };
 
+    //Setting up the GameLogic constructor
     GameLogic() {
         random = new Random();
         this.setPreferredSize(new Dimension(screenDim, screenDim));
@@ -47,6 +48,8 @@ public class GameLogic extends JPanel implements ActionListener {
         this.setFocusable(true);
 
         this.addKeyListener(new keyAdapter());
+        
+        //Responsible for mouse input (i.e. clicking the buttons)
         this.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 int mousex = e.getX();
@@ -79,6 +82,7 @@ public class GameLogic extends JPanel implements ActionListener {
         StartGame();
     }
 
+    //StartGame function resets variables and starts the game
     public void StartGame() {
         generate();
         snakeparts = 5;
@@ -88,12 +92,18 @@ public class GameLogic extends JPanel implements ActionListener {
         y[0] = boardDim/2;
         timer = new Timer(gameDelay, this);
         timer.start();
+        //Anything but a number that would appear on the grid lol
         for (int i = 0; i < mineX.length; i++) {
-            mineX[i] = 0;
-            mineY[i] = 0;
+            mineX[i] = 21;
+            mineY[i] = -1;
+        }
+        for (int i = 1; i < snakeparts; i++) {
+            x[i] = -10;
+            y[i] = -839;
         }
     }
 
+    //Paints the graphics of the actual game
     public void paintComponent (Graphics g) {
         super.paintComponent(g);
         if (running) {
@@ -132,6 +142,8 @@ public class GameLogic extends JPanel implements ActionListener {
         }
     }
 
+    //Updates positions of the head based on input
+    //Trailing parts get updated by following the next closest part to the head
     public void move() {
         for (int i = 0; i < snakeparts; i++) {
             x[snakeparts-i] = x[snakeparts-i-1];
@@ -152,6 +164,8 @@ public class GameLogic extends JPanel implements ActionListener {
         }
     }
 
+    //I had to make this function to help detect collisions and ensure that apples/mines were not created on top of the snake
+    //AI CREDIT: I asked Gemini for help on how to make this function 
     public boolean contains(int[] list, int item) {
         for (int k = 0; k < list.length; k++) {
             if (list[k] == item) {
@@ -160,13 +174,14 @@ public class GameLogic extends JPanel implements ActionListener {
         }
         return false;
     }
-
+    
+    //Generates apples, and mines if the mod is active
     public void generate() {
         do {
             appleX = random.nextInt((int)(boardDim));
             appleY = random.nextInt((int)(boardDim));
         } while (contains(x, appleX) && contains(y, appleY));
-        if ((snakeparts-6)%2 == 1 && mines) {
+        if ((snakeparts-6)%2 == 0 && mines) {
             do {
                 mineX[(snakeparts-6)/2] = random.nextInt((int)(boardDim));
                 mineY[(snakeparts-6)/2] = random.nextInt((int)(boardDim));
@@ -207,6 +222,8 @@ public class GameLogic extends JPanel implements ActionListener {
         }
     }
 
+    //Paints graphics for the game over menu
+    //Features updating buttons and a Start button
     public void gameOver(Graphics g) {
         for (int i = 0; i < boardDim; i++) {
             for (int j = 0; j < boardDim; j++) {
@@ -266,6 +283,7 @@ public class GameLogic extends JPanel implements ActionListener {
         repaint();
     }
 
+    //Pretty much the main loop for the game; this keeps the game running
     public void actionPerformed (ActionEvent e) {
         if (running) {
             move();
@@ -273,6 +291,7 @@ public class GameLogic extends JPanel implements ActionListener {
         } repaint();
     }
 
+    //Responsible for detecting key input
     public class keyAdapter extends KeyAdapter {
         public void keyPressed (KeyEvent e) {
             switch(e.getKeyCode()) {
